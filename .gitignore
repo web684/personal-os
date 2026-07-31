@@ -1,0 +1,4 @@
+.workbuddy/
+outputs/
+*.py
+__pycache__/
