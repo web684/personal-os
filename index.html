@@ -1635,18 +1635,86 @@ const DEFAULT_CHECKIN=[
   {id:'ci_skin',label:'护肤',icon:'🧴'}
 ];
 
+// ===== 每日饮食菜单池（用于「每日更新」每日轮换） =====
+const DIET_BREAKFAST_POOL=[
+  '【红枣桂圆小米粥】小米50g加红枣5颗、桂圆8颗，水800ml煮30分钟至粘稠。\n【水煮蛋】鸡蛋1个冷水下锅，水沸后煮7分钟（溏心）或10分钟（全熟）。\n【凉拌黄瓜】黄瓜1根拍碎切段，加少许盐、醋、蒜末拌匀，淋几滴香油。',
+  '【燕麦牛奶】即食燕麦40g+纯牛奶250ml煮2分钟，撒蓝莓10颗、奇亚籽5g。\n【全麦三明治】全麦吐司2片夹煎蛋1个、生菜2片、低脂奶酪1片。\n【坚果一小把】核桃2颗+杏仁8颗，补充优质脂肪。',
+  '【南瓜小米粥】南瓜150g去皮切丁，小米50g，水800ml煮25分钟。\n【蒸山药】铁棍山药100g切段蒸15分钟，蘸少许桂花酱。\n【水煮西兰花】小朵焯水2分钟，淋少许酱油。',
+  '【八宝粥】糯米+红豆+薏米+莲子+桂圆+红枣+花生+百合各少许（合计80g），电饭煲预约4小时。\n【茶叶蛋】鸡蛋1个+红茶+八角+老抽煮15分钟，焖1小时更入味。\n【凉拌胡萝卜丝】胡萝卜1根刨丝+少许盐+香油+白醋。',
+  '【紫薯山药糊】紫薯100g+山药50g蒸熟，加牛奶200ml打成糊。\n【鸡蛋牛油果】牛油果半个切片铺全麦吐司，水波蛋1个，少许黑胡椒海盐。\n【小番茄】5颗对半切开，撒少许海盐。',
+  '【银耳莲子羹】银耳半朵+莲子20g+红枣5颗，小火煮40分钟至胶质浓稠。\n【蒸南瓜】贝贝南瓜1个（300g）切顶盖，挖籽后大火蒸25分钟。\n【凉拌木耳】黑木耳泡发焯水1分钟，蒜末+醋+生抽+香油拌匀。',
+  '【黑芝麻糊】黑芝麻粉30g+糯米粉10g+牛奶250ml煮开，加蜂蜜少许调味。\n【煎蛋三明治】全麦吐司+煎蛋+番茄片+生菜+低脂芝士片。\n【蓝莓酸奶】无糖酸奶150g+蓝莓30颗，益生菌+抗氧化。',
+  '【杂粮粥】大米+糙米+小米+燕麦+红豆（合计60g）预约电饭煲早上煮好。\n【酱牛肉】卤牛肉3-4片（自制或无添加成品），搭配黄瓜条。\n【水煮毛豆】带壳毛豆100g+盐+花椒煮10分钟，补充植物蛋白。',
+  '【香蕉燕麦饼】香蕉1根捣泥+燕麦40g+鸡蛋1个+少许牛奶，平底锅少油小火煎3分钟/面。\n【希腊酸奶】无糖酸奶150g+草莓3颗切丁+少许蜂蜜。\n【核桃露】核桃3颗+花生10g+牛奶200ml用料理机打30秒。',
+  '【豆浆油条（健康版）】自制无糖豆浆300ml+无矾油条1根（控量）。\n【小咸菜】少许萝卜干或酱瓜，开胃下饭。\n【水煮蛋】鸡蛋1个中等熟度。'
+];
+const DIET_LUNCH_POOL=[
+  '【薏米冬瓜排骨汤】排骨200g焯水，薏米30g提前泡2小时，冬瓜200g，姜3片。1.5L水煲1小时。\n【西兰花炒木耳】西兰花小朵焯水1分钟，木耳泡发，蒜末爆香翻炒2分钟。\n【杂粮饭】大米:糙米:小米=2:1:1，正常水量。',
+  '【番茄牛腩饭】牛腩300g切块焯水，番茄2个切丁炒出汁，加洋葱+土豆炖50分钟，浇在白米饭上。\n【凉拌秋葵】秋葵200g整根焯水3分钟，捞出过冰水切段，蒜末+酱油+醋+芥末少许拌匀。\n【紫菜蛋花汤】紫菜5g+鸡蛋1个+虾皮少许+葱花。',
+  '【三鲜水饺】猪肉白菜馅+虾仁6只+鸡蛋1个，包20个饺子，搭配醋+蒜泥蘸料。\n【凉拌海带丝】海带丝200g焯水2分钟，蒜末+醋+生抽+香油+小米辣少许。\n【紫菜虾皮汤】紫菜5g+虾皮少许+葱花，补充碘和钙。',
+  '【鸡胸肉藜麦碗】鸡胸肉150g煎至金黄切条，藜麦50g煮15分钟，牛油果半个，混合生菜+小番茄+橄榄油+柠檬汁。\n【南瓜浓汤】南瓜200g+洋葱半个+牛奶100ml打成浓汤，撒黑胡椒。',
+  '【清炒虾仁】基围虾200g去壳开背，料酒+姜片腌制5分钟，热油爆蒜末快炒2分钟。\n【蒜蓉粉丝蒸娃娃菜】娃娃菜切6瓣铺盘，粉丝泡软铺底，浇蒜蓉+蒸鱼豉油蒸8分钟。\n【糙米饭】糙米80g+水1:1.2煮40分钟。',
+  '【红烧肉炖土豆】五花肉200g切块煸出油，加冰糖炒糖色，下土豆200g+老抽+八角+姜炖40分钟。\n【蒜蓉油麦菜】油麦菜300g洗净，蒜末爆香大火快炒1分钟。\n【小米饭】小米80g+大米40g混合煮。',
+  '【香煎三文鱼】三文鱼150g用厨房纸吸干水，少许盐和黑胡椒腌制5分钟，少油中火每面煎3分钟。\n【芦笋口蘑】芦笋200g切段+口蘑5个切片，蒜末爆香翻炒3分钟。\n【藜麦杂粮饭】藜麦+糙米各30g煮15分钟。',
+  '【麻婆豆腐】嫩豆腐1盒切块焯水，牛肉末50g+豆瓣酱+花椒粉+葱花，勾薄芡。\n【干煸四季豆】四季豆300g去筋掰段，少油煸炒至表皮微皱，加肉末和蒜末。\n【白米饭】大米80g正常蒸。',
+  '【咖喱鸡饭】鸡腿肉2块切块，洋葱+胡萝卜+土豆各50g，咖喱块20g+椰奶100ml煮15分钟，浇在白米饭上。\n【凉拌黄瓜小菜】黄瓜拍碎+蒜末+醋+香油+辣椒油。\n【海带豆腐汤】海带结50g+嫩豆腐1小块+葱花。',
+  '【酸菜鱼】黑鱼片200g用蛋清+淀粉腌制5分钟，酸菜100g+泡椒+姜蒜爆香，加水煮开下鱼片1分钟。\n【清炒红薯叶】红薯叶300g+蒜末大火快炒2分钟。\n【杂粮馒头】1个（约80g）'
+];
+const DIET_DINNER_POOL=[
+  '【清蒸鲈鱼】鲈鱼1条（约400g）划三刀，铺姜片葱段，水沸上锅大火蒸8分钟，淋蒸鱼豉油+新鲜葱丝+一勺滚油。\n【清炒油麦菜】油麦菜洗净切段，蒜末爆香大火快炒1分钟。\n【山药小米粥】山药100g切小段+小米50g+水800ml煮25分钟。',
+  '【香菇滑鸡】鸡腿肉200g切块+香菇6朵切片，料酒+生抽+淀粉腌制10分钟，蒸15分钟。\n【凉拌菠菜】菠菜300g焯水1分钟过凉水，挤干切段，蒜末+醋+香油+芝麻酱少许拌匀。\n【糙米粥】糙米50g+水500ml煮40分钟。',
+  '【番茄鸡蛋面】番茄2个切丁炒出汁，鸡蛋2个炒散，加水煮开下挂面100g煮3分钟，撒葱花。\n【凉拌萝卜丝】白萝卜半根刨丝+少许盐杀水+醋+白糖+香菜。\n【紫菜汤】紫菜+虾皮+蛋花。',
+  '【白灼虾】基围虾200g+姜片+料酒+葱段水沸煮3分钟，捞出蘸酱油+芥末。\n【蒜蓉西兰花】西兰花300g掰小朵焯水2分钟，浇蒜蓉热油激香。\n【南瓜小米粥】南瓜150g+小米50g煮25分钟。',
+  '【香煎龙利鱼】龙利鱼柳1片用黑胡椒+盐+柠檬汁腌制10分钟，少油中火每面煎4分钟。\n【蘑菇炒芦笋】白蘑菇5个+芦笋150g切片，蒜末爆香翻炒3分钟。\n【紫薯糙米饭】紫薯100g切丁+糙米60g同煮。',
+  '【葱油拌面】细面条80g煮3分钟过凉水，小葱切段冷油慢炸至焦黄，加生抽+糖+少许老抽调汁拌匀。\n【凉拌豆腐】嫩豆腐1盒切块+葱花+生抽+香油+少许辣椒油。\n【紫菜蛋花汤】紫菜5g+鸡蛋1个+虾皮。',
+  '【木耳炒肉片】里脊肉100g切片腌制+黑木耳100g泡发，蒜末爆香翻炒3分钟。\n【清炒小白菜】小白菜300g洗净，蒜末爆香大火快炒1分钟。\n【杂粮饭】大米:糙米:小米=2:1:1。',
+  '【酸辣汤面】挂面80g煮熟过水，碗中放醋+生抽+辣椒油+白胡椒+葱花，浇热汤冲开。\n【凉拌黄瓜花生米】黄瓜拍碎+油炸花生米20g+蒜末+醋+生抽。\n【蒸蛋羹】鸡蛋2个打散+温水200ml+少许盐，蒸10分钟淋生抽香油。',
+  '【冬瓜虾仁汤】冬瓜200g去皮切薄片+虾仁100g焯水，姜片+盐+白胡椒煮5分钟。\n【蒜蓉空心菜】空心菜300g+蒜末大火快炒1分钟。\n【杂粮粥】大米+小米+燕麦+红豆（合计60g）预约煮好。',
+  '【清炖羊肉萝卜汤】羊肉300g焯水，萝卜200g切块，姜+葱+料酒小火煲1.5小时。\n【凉拌海蜇】海蜇皮100g泡发切丝+黄瓜丝+蒜末+醋+生抽+香油。\n【玉米窝头】1个（约80g）粗粮主食。'
+];
+const DIET_SNACK_POOL=[
+  '【绿豆百合汤】绿豆50g提前泡1小时，百合干10g泡软。绿豆加水1L煮至开花（约30分钟），加百合和冰糖少许。',
+  '【银耳红枣羹】银耳半朵+红枣5颗+枸杞10g，小火煮40分钟至胶质浓稠。',
+  '【无糖酸奶+蓝莓】无糖希腊酸奶150g+蓝莓30颗+奇亚籽3g。',
+  '【烤红薯】红薯1个（中等大小）洗净，烤箱200°C烤40分钟，或微波炉高火8分钟。',
+  '【水果沙拉】苹果1个+橙子1个+猕猴桃1个+蓝莓10颗，切块拌匀，可挤少许柠檬汁防氧化。',
+  '【原味坚果】核桃2颗+腰果8颗+杏仁6颗，每日一小把（约15g）控量。',
+  '【红豆薏米水】红豆+薏米各30g提前泡2小时，加水1.5L煮30分钟，晾凉饮用。',
+  '【桂花酒酿小圆子】无糖酒酿100g+小汤圆5颗煮熟，撒干桂花少许。'
+];
+const DIET_PRINCIPLES_POOL=[
+  '**饮食原则**\n\n🌿 **湿疹调理**: 忌辛辣、海鲜发物（虾蟹）、牛羊肉、酒精。宜吃薏米、冬瓜、绿豆、山药、茯苓、苦瓜等清热祛湿食材。\n\n💆 **抗痘饮食**: 忌高GI食物（甜点、白面包）、奶制品、油炸食品。宜吃西兰花（抗氧化）、木耳（排毒）、油麦菜（清热）。\n\n❤️ **补气血**: 红枣、桂圆、山药、牛肉——温和补气血，避免寒凉生冷。\n\n🍳 **操作建议**: 每餐核心操作不超过3个步骤，平均30-45分钟可完成。备菜可提前一晚准备。',
+  '**饮食原则**\n\n🥗 **清淡为王**: 少油少盐少糖，每餐蔬菜占1/2，蛋白质占1/4，主食占1/4。\n\n💧 **补水优先**: 每日饮水1500-2000ml，餐前300ml温水有助于控制食量。\n\n⏰ **三餐规律**: 早餐7-9点、午餐12-13点、晚餐18-19点，避免夜宵加重肠胃负担。\n\n🍵 **加餐智慧**: 上下午各一次加餐（水果/坚果/酸奶），避免一次吃太撑。',
+  '**饮食原则**\n\n🌡️ **温热为主**: 少冰少凉，温水热汤优先，保护脾胃阳气。\n\n🥩 **优质蛋白**: 鱼/虾/鸡胸/牛里脊/豆腐/蛋，每餐至少含一种。\n\n🌾 **粗细搭配**: 精米白面搭配糙米/燕麦/小米/红薯，GI 更稳。\n\n🍎 **彩虹饮食**: 每日5种以上颜色蔬果——红黄绿白紫，植化素全谱摄入。',
+  '**饮食原则**\n\n🧂 **控糖控盐**: 每日糖<25g、钠<1500mg，少加工食品多天然食材。\n\n🥬 **多吃十字花科**: 西兰花/白菜/萝卜/芥蓝，含萝卜硫素抗氧化。\n\n🐟 **每周深海鱼2次**: 三文鱼/鲈鱼/鳕鱼，Omega-3 抗炎护脑。\n\n🍵 **茶饮推荐**: 绿茶（抗氧化）、红茶（暖胃）、菊花茶（清肝）。',
+  '**饮食原则**\n\n🥣 **早餐必须吃**: 不吃早餐易低血糖+暴饮暴食，优质碳水+蛋白+蔬果缺一不可。\n\n🍚 **晚餐七分饱**: 距离睡眠3小时以上，主食减半，蔬果为主。\n\n🚫 **避开三类**: 油炸/烧烤/腌制品——致癌物+高钠+反式脂肪。\n\n💆 **皮肤友好**: 远离奶制品和高糖，减少皮脂分泌；多吃番茄（番茄红素）和三文鱼（Omega-3）。'
+];
+
+// 根据日期+餐次类型稳定选择一份菜谱（每日轮换）
+function pickDietMeal(type,dateKey){
+  const poolMap={breakfast:DIET_BREAKFAST_POOL,lunch:DIET_LUNCH_POOL,dinner:DIET_DINNER_POOL,snack:DIET_SNACK_POOL,principles:DIET_PRINCIPLES_POOL};
+  const pool=poolMap[type];
+  if(!pool||!pool.length) return '';
+  let h=0;
+  const s=(type||'')+'_'+(dateKey||'');
+  for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}
+  return pool[Math.abs(h)%pool.length];
+}
+
 // Seed daily diet plan if empty or stale
-if(!DATA.lifeDiet||!DATA.lifeDiet.date||DATA.lifeDiet.date!==today()){
+if(!DATA.lifeDiet||!DATA.lifeDiet.date||DATA.lifeDiet.date!==today()||DATA.lifeDiet.autoUpdate){
   const ts=now();
+  const dk=today();
   DATA.lifeDiet={
-    date:today(),
+    date:dk,
     meals:{
-      breakfast:'【红枣桂圆小米粥】小米50g加红枣5颗、桂圆8颗，水800ml煮30分钟至粘稠。\n【水煮蛋】鸡蛋1个冷水下锅，水沸后煮7分钟（溏心）或10分钟（全熟）。\n【凉拌黄瓜】黄瓜1根拍碎切段，加少许盐、醋、蒜末拌匀，淋几滴香油。',
-      lunch:'【薏米冬瓜排骨汤】排骨200g焯水去血沫，薏米30g提前泡2小时，冬瓜200g去皮切块，姜3片。所有材料入锅加水1.5L，大火煮沸转小火煲1小时，出锅前加盐。\n【西兰花炒木耳】西兰花掰小朵焯水1分钟，干木耳泡发撕小片。热锅少油爆蒜末，下木耳翻炒，加西兰花、少许盐和蚝油，翻炒2分钟出锅。\n【杂粮饭】大米:糙米:小米=2:1:1，正常煮饭水量。',
-      dinner:'【清蒸鲈鱼】鲈鱼1条（约400g）洗净，鱼身划三刀，铺姜片和葱段。水沸后上锅大火蒸8分钟，倒掉蒸出的腥水，淋蒸鱼豉油，铺新鲜葱丝，浇一勺滚油激香。\n【清炒油麦菜】油麦菜洗净切段，热锅少油爆蒜末，下菜大火快炒1分钟，加盐即可，保持脆嫩。\n【山药小米粥】山药100g去皮切小段，小米50g，水800ml，煮25分钟至山药绵软。',
-      snack:'【绿豆百合汤】绿豆50g提前泡1小时，百合干10g泡软。绿豆加水1L煮至开花（约30分钟），加入百合和冰糖少许再煮5分钟。晾凉饮用更佳，清热祛湿养颜。'
+      breakfast:pickDietMeal('breakfast',dk),
+      lunch:pickDietMeal('lunch',dk),
+      dinner:pickDietMeal('dinner',dk),
+      snack:pickDietMeal('snack',dk)
     },
-    principles:'**饮食原则**\n\n🌿 **湿疹调理**: 忌辛辣、海鲜发物（虾蟹）、牛羊肉、酒精。宜吃薏米、冬瓜、绿豆、山药、茯苓、苦瓜等清热祛湿食材。今日薏米+冬瓜+绿豆三重祛湿搭配。\n\n💆 **抗痘饮食**: 忌高GI食物（甜点、白面包）、奶制品、油炸食品。宜吃西兰花（抗氧化）、木耳（排毒）、油麦菜（清热）。鲈鱼低脂优质蛋白，不诱发痘痘。\n\n❤️ **补气血**: 红枣、桂圆（早餐粥）、排骨（午餐汤）、山药（晚餐粥）——三餐饮品搭配温和补气血，不上火。\n\n🍳 **操作难度**: 每餐核心操作不超过3个步骤，平均30-45分钟可完成。备菜可提前一晚准备（泡薏米/绿豆、解冻排骨/鲈鱼）。',
+    principles:pickDietMeal('principles',dk),
+    autoUpdate:typeof DATA.lifeDiet.autoUpdate==='boolean'?DATA.lifeDiet.autoUpdate:true,
     lastUpdated:ts
   };
   saveData(DATA);
@@ -2455,8 +2523,16 @@ function renderDietCard(){
     </div>`;
   }
   const updateStr=d.lastUpdated?`<span style="font-size:10px;color:var(--text-secondary)">· 更新于 ${new Date(d.lastUpdated).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span>`:'';
+  const autoOn=!!d.autoUpdate;
+  const autoBtnId='dietAutoBtn_'+Math.random().toString(36).slice(2,8);
   let body=`<div class="content-card" style="background:linear-gradient(135deg,#fef9f0,#fdf3e4);border-left:4px solid #e8a838">
-    <h3><span class="card-icon">🥗</span>今日饮食计划 ${updateStr}</h3>`;
+    <h3>
+      <span class="card-icon">🥗</span>今日饮食计划 ${updateStr}
+      <span style="margin-left:auto;display:flex;gap:6px;align-items:center">
+        <button id="${autoBtnId}" onclick="toggleDietAutoUpdate()" style="font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid ${autoOn?'#e8a838':'var(--border)'};background:${autoOn?'#e8a838':'#fff'};color:${autoOn?'#fff':'var(--text-secondary)'};font-weight:600;cursor:pointer" title="开启后每天自动更换菜单">${autoOn?'✓ 每日更新':'○ 每日更新'}</button>
+        <button onclick="refreshDietPlan()" style="font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-weight:600;cursor:pointer" title="立即换一份菜单">🔄 换一份</button>
+      </span>
+    </h3>`;
 
   // Meal cards in a grid
   const meals=[
@@ -2495,6 +2571,46 @@ function renderDietCard(){
 
   body+=`</div>`;
   return body;
+}
+
+// 切换饮食计划「每日更新」开关
+function toggleDietAutoUpdate(){
+  if(!DATA.lifeDiet) return;
+  DATA.lifeDiet.autoUpdate=!DATA.lifeDiet.autoUpdate;
+  if(DATA.lifeDiet.autoUpdate){
+    // 开启时立即按今天日期重新抽一组菜单
+    const dk=today();
+    DATA.lifeDiet.date=dk;
+    DATA.lifeDiet.meals={
+      breakfast:pickDietMeal('breakfast',dk),
+      lunch:pickDietMeal('lunch',dk),
+      dinner:pickDietMeal('dinner',dk),
+      snack:pickDietMeal('snack',dk)
+    };
+    DATA.lifeDiet.principles=pickDietMeal('principles',dk);
+    DATA.lifeDiet.lastUpdated=now();
+  }
+  saveData(DATA);
+  renderView();
+}
+
+// 手动换一份今日菜单（不影响 autoUpdate 设置）
+function refreshDietPlan(){
+  if(!DATA.lifeDiet) return;
+  const dk=today();
+  // 拼一个随机种子（按分钟级时间戳）让当前会话内多次点击会换不同菜
+  const seed=dk+'_'+Math.floor(Date.now()/60000);
+  DATA.lifeDiet.date=dk;
+  DATA.lifeDiet.meals={
+    breakfast:pickDietMeal('breakfast',seed+'_b'),
+    lunch:pickDietMeal('lunch',seed+'_l'),
+    dinner:pickDietMeal('dinner',seed+'_d'),
+    snack:pickDietMeal('snack',seed+'_s')
+  };
+  DATA.lifeDiet.principles=pickDietMeal('principles',seed+'_p');
+  DATA.lifeDiet.lastUpdated=now();
+  saveData(DATA);
+  renderView();
 }
 
 function renderExerciseCard(){
