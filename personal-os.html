@@ -119,12 +119,10 @@ input,textarea,select{font-family:inherit;font-size:inherit}
 
 /* Main Content */
 .main-content{
-  flex:1;margin-left:var(--sidebar-width);
+  flex:1;margin-left:0;
   padding:0;min-height:100vh;min-height:100dvh;
   display:flex;flex-direction:column;
-  transition:margin-left var(--transition);
 }
-.main-content.sidebar-closed{margin-left:0}
 
 /* Sidebar Toggle Button (always visible) */
 .sidebar-toggle-btn{
@@ -149,26 +147,26 @@ input,textarea,select{font-family:inherit;font-size:inherit}
 }
 .sidebar-overlay.show{opacity:1;pointer-events:auto}
 
-/* Bottom Tab Bar (mobile only) */
+/* Bottom Tab Bar (always visible) */
 .bottom-nav{
-  display:none;
+  display:block;
   position:fixed;left:0;right:0;bottom:0;z-index:180;
   background:var(--card-bg);
   border-top:1px solid var(--border);
   box-shadow:0 -2px 12px rgba(0,0,0,.05);
   overflow-x:auto;overflow-y:hidden;
   -webkit-overflow-scrolling:touch;
-  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
   scrollbar-width:none;
 }
 .bottom-nav::-webkit-scrollbar{display:none}
-.bottom-nav-inner{display:inline-flex;gap:2px;min-width:100%}
+.bottom-nav-inner{display:inline-flex;gap:4px;min-width:100%;align-items:center}
 .bottom-nav .nav-item{
   flex-shrink:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  padding:6px 10px;border-radius:10px;
+  padding:8px 12px;border-radius:10px;
   font-size:11px;font-weight:600;color:var(--text-tertiary);
-  min-width:60px;max-width:84px;
+  min-width:64px;max-width:96px;
   transition:all var(--transition);
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
@@ -182,9 +180,25 @@ input,textarea,select{font-family:inherit;font-size:inherit}
 .bottom-nav .nav-item.active{background:var(--accent);color:#fff}
 .bottom-nav .nav-item:active{background:rgba(0,0,0,.06)}
 .bottom-nav .nav-item.active:active{background:var(--accent)}
+.bottom-nav .nav-add{
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:50%;
+  background:var(--bg);color:var(--text-secondary);
+  font-size:22px;font-weight:300;
+  margin-left:6px;
+  cursor:pointer;border:1.5px dashed var(--border);
+  -webkit-tap-highlight-color:transparent;
+}
+.bottom-nav .nav-add:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media(min-width:769px){
+  .bottom-nav .nav-item{padding:10px 16px;font-size:12px;min-width:76px}
+  .bottom-nav .nav-item .nav-icon{font-size:22px}
+  .bottom-nav .nav-item .nav-name{font-size:11.5px}
+}
 
 /* Content Area */
-.content-area{flex:1;padding:0 24px 100px;overflow-y:auto}
+.content-area{flex:1;padding:0 24px calc(80px + env(safe-area-inset-bottom) + 20px);overflow-y:auto}
 .section-title{font-size:20px;font-weight:700;letter-spacing:-0.5px;margin-bottom:16px;color:var(--text);display:flex;align-items:center;gap:10px}
 .sec-prog{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
 .sec-prog-bar{width:80px;height:6px;border-radius:3px;background:rgba(0,0,0,.07);overflow:hidden}
@@ -802,9 +816,6 @@ input,textarea,select{font-family:inherit;font-size:inherit}
 
 /* Responsive */
 @media(max-width:768px){
-  .main-content{margin-left:0}
-  .sidebar-toggle-btn{left:14px}
-  .sidebar-toggle-btn.shifted{left:14px}
   .content-area{padding:0 16px calc(70px + env(safe-area-inset-bottom) + 16px)}
   .review-grid{grid-template-columns:1fr}
   .health-grid{grid-template-columns:repeat(2,1fr)}
@@ -812,7 +823,6 @@ input,textarea,select{font-family:inherit;font-size:inherit}
   .news-toolbar-right{align-self:flex-end}
   .ov-grid{grid-template-columns:repeat(4,1fr);gap:8px}
   .ck-grid{grid-template-columns:repeat(2,1fr)}
-  .bottom-nav{display:block}
 }
 @media(max-width:400px){
   .health-grid{grid-template-columns:1fr 1fr}
@@ -1051,31 +1061,22 @@ input,textarea,select{font-family:inherit;font-size:inherit}
 <body>
 <div class="app-container">
 
-<!-- Sidebar Toggle Button -->
-<button class="sidebar-toggle-btn shifted" id="sidebarToggleBtn" aria-label="切换侧边栏">☰</button>
-
-<!-- Sidebar Overlay -->
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="app-logo">Jy</div>
-    <h2>Juny</h2>
+<!-- Add Category Modal -->
+<div class="sidebar-overlay" id="addCatOverlay" onclick="hideAddCategoryModal()" style="display:none"></div>
+<div id="addCatModal" style="display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:300;background:var(--card-bg);border-radius:14px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.18);width:min(90vw,360px)">
+  <div style="font-size:15px;font-weight:700;margin-bottom:12px;color:var(--text)">+ 添加新分区</div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <input type="text" id="newCategoryName" placeholder="分区名称" maxlength="6" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none">
+    <input type="text" id="newCategoryIcon" placeholder="图标" maxlength="2" style="width:60px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:18px;text-align:center;outline:none">
   </div>
-  <nav class="sidebar-nav" id="sidebarNav"></nav>
-  <div class="sidebar-add" id="sidebarAdd">
-    <button id="addCategoryBtn" onclick="showAddCategory()">+ 添加分区</button>
-    <div class="sidebar-add-row" id="addCategoryRow" style="display:none">
-      <input type="text" id="newCategoryName" placeholder="分区名称" maxlength="6">
-      <input type="text" id="newCategoryIcon" placeholder="图标" maxlength="2" style="max-width:44px">
-      <button class="btn-confirm" onclick="addCategory()">添加</button>
-      <button class="btn-cancel" onclick="hideAddCategory()">取消</button>
-    </div>
+  <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:14px">提示：长按分区名可删除（系统默认分区不可删）</div>
+  <div style="display:flex;gap:8px;justify-content:flex-end">
+    <button onclick="hideAddCategoryModal()" style="padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-secondary)">取消</button>
+    <button onclick="addCategory()" style="padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;background:var(--accent);color:#fff">添加</button>
   </div>
-</aside>
+</div>
 
-<!-- Bottom Tab Bar (mobile) -->
+<!-- Bottom Tab Bar (mobile + desktop) -->
 <nav class="bottom-nav" id="bottomNav"><div class="bottom-nav-inner" id="bottomNavInner"></div></nav>
 
 <!-- Main -->
@@ -1973,15 +1974,6 @@ function emotionAggBy(list,gran){
    Sidebar Rendering
    ============================================ */
 function renderSidebar(){
-  const nav=document.getElementById('sidebarNav');
-  nav.innerHTML=DATA.sidebarCategories.map(c=>{
-    const rem=c.removable!==false;
-    return `<div class="nav-item${DATA.activeView===c.id?' active':''}" onclick="switchView('${c.id}')">
-      <span class="nav-icon">${c.icon||'📌'}</span>
-      <span class="nav-name">${c.name}</span>
-      ${rem?`<span class="nav-remove" onclick="event.stopPropagation();removeCategory('${c.id}')">×</span>`:''}
-    </div>`;
-  }).join('');
   renderBottomNav();
 }
 
@@ -1990,11 +1982,12 @@ function renderBottomNav(){
   if(!inner) return;
   inner.innerHTML=DATA.sidebarCategories.map(c=>{
     const active=DATA.activeView===c.id?' active':'';
-    return `<div class="nav-item${active}" onclick="switchView('${c.id}')">
+    const rem=c.removable!==false;
+    return `<div class="nav-item${active}" onclick="switchView('${c.id}')"${rem?` oncontextmenu="event.preventDefault();event.stopPropagation();removeCategory('${c.id}')" ontouchstart="onLongPressStart(event,'${c.id}')" ontouchend="onLongPressEnd()" ontouchmove="onLongPressEnd()"`:''}>
       <span class="nav-icon">${c.icon||'📌'}</span>
       <span class="nav-name">${c.name}</span>
     </div>`;
-  }).join('');
+  }).join('')+`<div class="nav-add" onclick="showAddCategoryModal()" title="添加新分区">+</div>`;
   // Scroll active item into view
   setTimeout(()=>{
     const activeEl=inner.querySelector('.nav-item.active');
@@ -2002,6 +1995,20 @@ function renderBottomNav(){
       activeEl.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
     }
   },50);
+}
+
+let _longPressTimer=null;
+let _longPressTriggered=false;
+function onLongPressStart(e,id){
+  _longPressTriggered=false;
+  _longPressTimer=setTimeout(()=>{
+    _longPressTriggered=true;
+    if(navigator.vibrate) navigator.vibrate(30);
+    removeCategory(id);
+  },600);
+}
+function onLongPressEnd(){
+  if(_longPressTimer){clearTimeout(_longPressTimer);_longPressTimer=null;}
 }
 
 function initSidebar(){
@@ -2027,25 +2034,35 @@ function initSidebar(){
 }
 
 function showAddCategory(){
-  document.getElementById('addCategoryBtn').style.display='none';
-  document.getElementById('addCategoryRow').style.display='flex';
-  document.getElementById('newCategoryName').focus();
+  showAddCategoryModal();
 }
 function hideAddCategory(){
-  document.getElementById('addCategoryBtn').style.display='block';
-  document.getElementById('addCategoryRow').style.display='none';
-  document.getElementById('newCategoryName').value='';
-  document.getElementById('newCategoryIcon').value='';
+  hideAddCategoryModal();
+}
+function showAddCategoryModal(){
+  const m=document.getElementById('addCatModal');
+  const o=document.getElementById('addCatOverlay');
+  if(m) m.style.display='block';
+  if(o) o.style.display='block';
+  setTimeout(()=>{const n=document.getElementById('newCategoryName');if(n)n.focus();},50);
+}
+function hideAddCategoryModal(){
+  const m=document.getElementById('addCatModal');
+  const o=document.getElementById('addCatOverlay');
+  if(m) m.style.display='none';
+  if(o) o.style.display='none';
+  const n=document.getElementById('newCategoryName');if(n)n.value='';
+  const ic=document.getElementById('newCategoryIcon');if(ic)ic.value='';
 }
 function addCategory(){
   const name=document.getElementById('newCategoryName').value.trim();
   const icon=document.getElementById('newCategoryIcon').value.trim()||'📌';
-  if(!name) return;
+  if(!name){alert('请填写分区名称');return;}
   const id='cat_'+Date.now();
   DATA.sidebarCategories.push({id,name,icon,removable:true});
   saveData(DATA);
-  hideAddCategory();
-  renderSidebar();
+  hideAddCategoryModal();
+  renderBottomNav();
   switchView(id);
 }
 function removeCategory(id){
@@ -2062,33 +2079,9 @@ function removeCategory(id){
 /* ============================================
    View Switching
    ============================================ */
-function toggleSidebar(){
-  const sb=document.getElementById('sidebar');
-  const ov=document.getElementById('sidebarOverlay');
-  const tb=document.getElementById('sidebarToggleBtn');
-  const mc=document.getElementById('mainContent');
-  const isMobile=window.innerWidth<=768;
-  const isOpen=!sb.classList.contains('closed');
-
-  if(isOpen){
-    sb.classList.add('closed');
-    if(isMobile) ov.classList.remove('show');
-    tb.classList.remove('shifted');
-    mc.classList.add('sidebar-closed');
-  }else{
-    sb.classList.remove('closed');
-    if(isMobile) ov.classList.add('show');
-    tb.classList.add('shifted');
-    mc.classList.remove('sidebar-closed');
-  }
-}
-function closeSidebarMobile(){
-  const sb=document.getElementById('sidebar');
-  if(sb.classList.contains('closed')) return; // already closed
-  if(window.innerWidth<=768){
-    toggleSidebar();
-  }
-}
+// (sidebar removed — bottom-nav handles navigation; toggleSidebar/closeSidebarMobile kept as no-ops for legacy refs)
+function toggleSidebar(){}
+function closeSidebarMobile(){}
 
 function switchView(viewId){
   DATA.activeView=viewId;
@@ -5279,48 +5272,14 @@ function init(){
   updateStats();
   if(!DATA.activeView||DATA.activeView==='') DATA.activeView='home';
   renderView();
-
-  // Set initial sidebar state based on screen size
-  const sb=document.getElementById('sidebar');
-  const tb=document.getElementById('sidebarToggleBtn');
-  const ov=document.getElementById('sidebarOverlay');
-  const mc=document.getElementById('mainContent');
-  if(window.innerWidth<=768){
-    // Mobile: sidebar starts closed
-    if(!sb.classList.contains('closed')){
-      sb.classList.add('closed');
-      tb.classList.remove('shifted');
-      mc.classList.add('sidebar-closed');
-    }
-  }else{
-    // Desktop: sidebar starts open
-    sb.classList.remove('closed');
-    tb.classList.add('shifted');
-    mc.classList.remove('sidebar-closed');
-  }
-
-  // Bind toggle events (click + touchend for reliable mobile taps)
-  tb.addEventListener('click',function(e){e.preventDefault();toggleSidebar();});
-  tb.addEventListener('touchend',function(e){e.preventDefault();toggleSidebar();});
-  ov.addEventListener('click',function(e){e.preventDefault();toggleSidebar();});
-
-  // Handle window resize
-  window.addEventListener('resize',function(){
-    if(window.innerWidth>768){
-      sb.classList.remove('closed');
-      ov.classList.remove('show');
-      tb.classList.add('shifted');
-      mc.classList.remove('sidebar-closed');
-    }
-  });
+  // (sidebar removed; bottom-nav now handles all navigation)
 }
 
-document.addEventListener('DOMContentLoaded',init);
-
-// Handle Escape key to close mobile sidebar
+// ESC closes the add-category modal
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
-    closeSidebarMobile();
+    const m=document.getElementById('addCatModal');
+    if(m && m.style.display==='block') hideAddCategoryModal();
   }
 });
 
