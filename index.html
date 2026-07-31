@@ -149,6 +149,40 @@ input,textarea,select{font-family:inherit;font-size:inherit}
 }
 .sidebar-overlay.show{opacity:1;pointer-events:auto}
 
+/* Bottom Tab Bar (mobile only) */
+.bottom-nav{
+  display:none;
+  position:fixed;left:0;right:0;bottom:0;z-index:180;
+  background:var(--card-bg);
+  border-top:1px solid var(--border);
+  box-shadow:0 -2px 12px rgba(0,0,0,.05);
+  overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  scrollbar-width:none;
+}
+.bottom-nav::-webkit-scrollbar{display:none}
+.bottom-nav-inner{display:inline-flex;gap:2px;min-width:100%}
+.bottom-nav .nav-item{
+  flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  padding:6px 10px;border-radius:10px;
+  font-size:11px;font-weight:600;color:var(--text-tertiary);
+  min-width:60px;max-width:84px;
+  transition:all var(--transition);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+}
+.bottom-nav .nav-item .nav-icon{font-size:20px;line-height:1}
+.bottom-nav .nav-item .nav-name{
+  font-size:10.5px;line-height:1.1;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.bottom-nav .nav-item.active{background:var(--accent);color:#fff}
+.bottom-nav .nav-item:active{background:rgba(0,0,0,.06)}
+.bottom-nav .nav-item.active:active{background:var(--accent)}
+
 /* Content Area */
 .content-area{flex:1;padding:0 24px 100px;overflow-y:auto}
 .section-title{font-size:20px;font-weight:700;letter-spacing:-0.5px;margin-bottom:16px;color:var(--text);display:flex;align-items:center;gap:10px}
@@ -771,13 +805,14 @@ input,textarea,select{font-family:inherit;font-size:inherit}
   .main-content{margin-left:0}
   .sidebar-toggle-btn{left:14px}
   .sidebar-toggle-btn.shifted{left:14px}
-  .content-area{padding:0 16px 100px}
+  .content-area{padding:0 16px calc(70px + env(safe-area-inset-bottom) + 16px)}
   .review-grid{grid-template-columns:1fr}
   .health-grid{grid-template-columns:repeat(2,1fr)}
   .news-toolbar{flex-direction:column;align-items:stretch}
   .news-toolbar-right{align-self:flex-end}
   .ov-grid{grid-template-columns:repeat(4,1fr);gap:8px}
   .ck-grid{grid-template-columns:repeat(2,1fr)}
+  .bottom-nav{display:block}
 }
 @media(max-width:400px){
   .health-grid{grid-template-columns:1fr 1fr}
@@ -1039,6 +1074,9 @@ input,textarea,select{font-family:inherit;font-size:inherit}
     </div>
   </div>
 </aside>
+
+<!-- Bottom Tab Bar (mobile) -->
+<nav class="bottom-nav" id="bottomNav"><div class="bottom-nav-inner" id="bottomNavInner"></div></nav>
 
 <!-- Main -->
 <main class="main-content" id="mainContent">
@@ -1876,6 +1914,26 @@ function renderSidebar(){
       ${rem?`<span class="nav-remove" onclick="event.stopPropagation();removeCategory('${c.id}')">×</span>`:''}
     </div>`;
   }).join('');
+  renderBottomNav();
+}
+
+function renderBottomNav(){
+  const inner=document.getElementById('bottomNavInner');
+  if(!inner) return;
+  inner.innerHTML=DATA.sidebarCategories.map(c=>{
+    const active=DATA.activeView===c.id?' active':'';
+    return `<div class="nav-item${active}" onclick="switchView('${c.id}')">
+      <span class="nav-icon">${c.icon||'📌'}</span>
+      <span class="nav-name">${c.name}</span>
+    </div>`;
+  }).join('');
+  // Scroll active item into view
+  setTimeout(()=>{
+    const activeEl=inner.querySelector('.nav-item.active');
+    if(activeEl && activeEl.scrollIntoView){
+      activeEl.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+    }
+  },50);
 }
 
 function initSidebar(){
