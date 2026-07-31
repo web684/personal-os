@@ -1,15 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="112" fill="#2a8c61"/>
-  <circle cx="256" cy="256" r="180" fill="none" stroke="#fff" stroke-width="3" opacity="0.3"/>
-  <g transform="translate(256,256)">
-    <ellipse cx="0" cy="-100" rx="28" ry="75" fill="#fff" opacity="0.95"/>
-    <ellipse cx="0" cy="-100" rx="28" ry="75" fill="#fff" opacity="0.95" transform="rotate(60)"/>
-    <ellipse cx="0" cy="-100" rx="28" ry="75" fill="#fff" opacity="0.95" transform="rotate(120)"/>
-    <ellipse cx="0" cy="-100" rx="28" ry="75" fill="#fff" opacity="0.95" transform="rotate(180)"/>
-    <ellipse cx="0" cy="-100" rx="28" ry="75" fill="#fff" opacity="0.95" transform="rotate(240)"/>
-    <ellipse cx="0" cy="-100" rx="28" ry="75" fill="#fff" opacity="0.95" transform="rotate(300)"/>
-    <circle cx="0" cy="0" r="35" fill="#fac775"/>
-    <circle cx="0" cy="0" r="20" fill="#ef9f27"/>
-  </g>
-  <text x="256" y="470" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="72" font-weight="bold" fill="#fff" opacity="0.9">Juny</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#3aa878"/>
+      <stop offset="100%" stop-color="#2a8c61"/>
+    </radialGradient>
+  </defs>
+  <rect width="192" height="192" rx="42" fill="url(#bg)"/>
+  <!-- Coconut body (brown round) -->
+  <ellipse cx="96" cy="110" rx="52" ry="54" fill="#6b3a1c"/>
+  <!-- Coconut texture: small dots -->
+  <circle cx="78" cy="100" r="2" fill="#4a2810" opacity="0.55"/>
+  <circle cx="96" cy="92" r="2" fill="#4a2810" opacity="0.55"/>
+  <circle cx="114" cy="100" r="2" fill="#4a2810" opacity="0.55"/>
+  <circle cx="86" cy="120" r="2" fill="#4a2810" opacity="0.55"/>
+  <circle cx="108" cy="120" r="2" fill="#4a2810" opacity="0.55"/>
+  <circle cx="96" cy="130" r="2" fill="#4a2810" opacity="0.55"/>
+  <circle cx="72" cy="118" r="2" fill="#4a2810" opacity="0.55"/>
+  <circle cx="120" cy="118" r="2" fill="#4a2810" opacity="0.55"/>
+  <!-- Three coconut "eyes" -->
+  <circle cx="86" cy="112" r="4" fill="#3a1f0a"/>
+  <circle cx="96" cy="116" r="4" fill="#3a1f0a"/>
+  <circle cx="106" cy="112" r="4" fill="#3a1f0a"/>
+  <!-- Green leaves/sprout on top -->
+  <path d="M96 60 Q86 50 80 60 Q86 56 96 60 Z" fill="#5fc77a"/>
+  <path d="M96 60 Q106 50 112 60 Q106 56 96 60 Z" fill="#7dd896"/>
+  <path d="M96 60 L96 70" stroke="#3a8c50" stroke-width="2" stroke-linecap="round"/>
+  <!-- Tiny straw -->
+  <rect x="98" y="48" width="3" height="14" fill="#f5e0a8" rx="1" transform="rotate(20 99 55)"/>
 </svg>
